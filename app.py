@@ -10,6 +10,10 @@ app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this in production
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///feedback.db'
 db = SQLAlchemy(app)
 
+# Google Form and Maps URLs
+GOOGLE_FORM_URL = "https://forms.gle/Arto8i6tVTnD8AY88"
+GOOGLE_MAPS_URL = "https://www.google.com/maps/place/INDURKAR+DENTAL+CLINIC/@19.1844115,77.2981665,17z/data=!3m1!4b1!4m6!3m5!1s0x3bd1d3586995a1ab:0x176bbc2f1428b7ba!8m2!3d19.1844115!4d77.3007414!16s%2Fg%2F11h3zmmjt_?entry=ttu"
+
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -49,9 +53,6 @@ with app.app_context():
         db.session.commit()
 
 def generate_qr_code():
-    # Google Maps URL for Indurkar Dental Clinic
-    url = "https://www.google.com/maps/place/INDURKAR+DENTAL+CLINIC/@19.1844115,77.2981665,17z/data=!3m1!4b1!4m6!3m5!1s0x3bd1d3586995a1ab:0x176bbc2f1428b7ba!8m2!3d19.1844115!4d77.3007414!16s%2Fg%2F11h3zmmjt_?entry=ttu"
-    
     # Create QR code instance
     qr = qrcode.QRCode(
         version=1,
@@ -60,8 +61,8 @@ def generate_qr_code():
         border=4,
     )
     
-    # Add data
-    qr.add_data(url)
+    # Add data - Google Maps URL
+    qr.add_data(GOOGLE_MAPS_URL)
     qr.make(fit=True)
     
     # Create an image from the QR Code
@@ -77,7 +78,7 @@ def generate_qr_code():
 @app.route('/')
 def index():
     qr_code = generate_qr_code()
-    return render_template('index.html', qr_code=qr_code)
+    return render_template('index.html', qr_code=qr_code, google_form_url=GOOGLE_FORM_URL, google_maps_url=GOOGLE_MAPS_URL)
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
@@ -99,7 +100,7 @@ def feedback():
     
     # Get all reviews, including sample reviews
     reviews = Feedback.query.order_by(Feedback.created_at.desc()).all()
-    return render_template('feedback.html', reviews=reviews)
+    return render_template('feedback.html', reviews=reviews, google_form_url=GOOGLE_FORM_URL, google_maps_url=GOOGLE_MAPS_URL)
 
 if __name__ == '__main__':
     app.run(debug=True) 
