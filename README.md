@@ -8,6 +8,7 @@ This application generates a QR code for Indurkar Dental Clinic's location and p
 - Feedback form for patient reviews
 - Star rating system
 - Database storage for feedback
+- Sample reviews display
 
 ## Setup
 
@@ -35,6 +36,7 @@ python app.py
 2. When scanned, the QR code will open Google Maps with the clinic's location
 3. Users can provide feedback by filling out the feedback form
 4. Feedback is stored in a SQLite database (`feedback.db`)
+5. View existing reviews on the feedback page
 
 ## Database
 
@@ -45,4 +47,4 @@ The application uses SQLite to store feedback. The database file (`feedback.db`)
 Before deploying to production:
 1. Change the `SECRET_KEY` in `app.py`
 2. Use a production-grade database
-3. Implement proper security measures 
+3. Implement proper security measures
